@@ -1,4 +1,4 @@
-#!/home/fritz-nvm/breazy_pallets/env/bin/python3
+#!/home/fritz-nvm/pallets/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

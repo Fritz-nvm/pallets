@@ -11,17 +11,15 @@
     <!-- Favicons -->
     <link href="{% static 'assets/img/favicon.png' %}" rel="icon" />
     <link
-      href="{% static 'assets/img/apple-touch-icon.png' %}"
-      rel="apple-touch-icon"
-    />
+      href="{% static 'assets/img/favicon.png' %}"
+      rel="apple-touch-icon" />
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet"  />
 
     <!-- Vendor CSS Files -->
     <link
@@ -53,7 +51,7 @@
       >
         <a href="#" class="logo d-flex align-items-center me-auto">
           <!-- Uncomment the line below if you also wish to use an image logo -->
-          <!-- <img src="assets/img/logo.png" alt=""> -->
+          <img src="{% static 'assets/img/logo.png' %}" alt="Pallet Liquidation Depot Logo">
           <h1 class="sitename">Pallet Liquidation Depot</h1>
         </a>
 
@@ -127,9 +125,7 @@
               <span class="sitename">Pallet Liquidation Depot</span>
             </a>
             <p>
-              Cras fermentum odio eu feugiat lide par naso tierra. Justo eget
-              nada terra videa magna derita valies darta donna mare fermentum
-              iaculis eu non diam phasellus.
+              At Pallet Liquidation Depot, we bridge the gap between major retailers and savvy entrepreneurs
             </p>
             <div class="social-links d-flex mt-4">
               <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -144,7 +140,7 @@
             <ul>
               <li><a href="{% url 'myapp:homepage' %}">Home</a></li>
               <li><a href="{% url 'myapp:about' %}">About us</a></li>
-              <li><a href="#">how it works</a></li>
+              <li><a href="{% url 'myapp:how_it_works' %}">how it works</a></li>
               <li><a href="#">Terms of service</a></li>
               <li><a href="{% url 'myapp:policy' %}">Privacy policy</a></li>
             </ul>
@@ -153,7 +149,8 @@
           <div class="col-lg-2 col-6 footer-links">
             <h4>Our Services</h4>
             <ul>
-              <li><a href="{% url 'myapp:store' %}">shop</a></li>
+              <li><a href="{% url 'myapp:store' %}">Our store</a></li>
+              <li><a href="#">Shipping</a></li>
               <li><a href="#">reviews</a></li>
               <li><a href="#">Return policy</a></li>
             </ul>
@@ -185,6 +182,12 @@
 
     <!-- Preloader -->
     <div id="preloader"></div>
+
+    {% block extra_js %}
+
+
+    {% endblock extra_js %}
+
 
     <!-- Vendor JS Files -->
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
