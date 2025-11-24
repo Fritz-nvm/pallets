@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% load static %}
+{% block active_homepage %} active
+{% endblock active_homepage %}
+{% block content %}
+<!-- Hero Section -->
+<section id="hero" class="hero section dark-background">
+  <img src="{% static 'assets/img/hero-1.jpeg' %}" alt="Warehouse with liquidation pallets" data-aos="fade-in" />
+
+  <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h2>Your Source for Premium Liquidation Pallets</h2>
+        <p>Buy directly from the source! We offer truckloads of customer returns, overstock, and shelf-pulls from major retailers at a fraction of the cost.</p>
+        <a href="{% url 'myapp:store' %}" class="btn-get-started">Shop Pallets Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Hero Section -->
+
+<!-- About Section -->
+<section id="about" class="about section">
+  <div class="container">
+    <div class="row gy-4">
+      <div
+        class="col-lg-5 position-relative"
+        data-aos="fade-up"
+        data-aos-delay="200">
+        <img src="{% static 'assets/img/hero-2.jpeg' %}" class="img-fluid" alt="Warehouse full of liquidation pallets at Pallet Liquidation Depot" />
+      <a href="{% static 'assets/img/video-00234.mp4' %}" class="glightbox pulsating-play-btn" data-glightbox="type: video">
+        
+      <!-- Optional: Add a play icon overlay -->
+      <div class="play-icon-overlay">
+    <i class="bi bi-play-circle-fill"></i>
+  </div>
+</a>
+      </div>
+
+      <div class="col-lg-7 content" data-aos="fade-up" data-aos-delay="100">
+        <h3>Your Trusted Partner in Liquidation</h3>
+        <p>
+          At Pallet Liquidation Depot, we bridge the gap between major retailers and savvy entrepreneurs. We acquire truckloads of high-quality returned and overstock merchandise, sort it for value, and pass the incredible savings directly to you. Our mission is to make bulk buying simple, profitable, and reliable.
+        </p>
+        <ul>
+          <li>
+            <i class="bi bi-diagram-3"></i>
+            <div>
+              <h5>Direct from Major Retailers</h5>
+              <p>
+                Our pallets are sourced directly from top-tier retailers, ensuring you get authentic, brand-name products that are in high demand.
+              </p>
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-fullscreen-exit"></i>
+            <div>
+              <h5>Transparent & Detailed Manifests</h5>
+              <p>
+                Know what you're buying. We provide detailed manifests with condition grades, so you can buy with confidence and maximize your ROI.
+              </p>
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-broadcast"></i>
+            <div>
+              <h5>Curated for Maximum Profit</h5>
+              <p>
+                We don't just sell random boxes. Our team curates pallets by category and potential value, helping you find the perfect inventory for your business.
+              </p>
+            </div>
+          </li>
+        </ul>
+        <p>
+          Whether you're an established reseller or just starting out, we provide the inventory you need to succeed. Build your business with Pallet Liquidation Depot.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /About Section -->
+
+<!-- Items Store Section -->
+<section id="store" class="store section">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Featured Liquidation Pallets</h2>
+    <div>
+      <span>Inventory</span>
+      <span class="description-title">Ready for Resale</span>
+    </div>
+  </div>
+  <!-- End Section Title -->
+
+  <div class="container">
+    <div class="row gy-4">
+      {% for item in items %}
+      <div
+        class="col-lg-4 col-md-6"
+        data-aos="fade-up"
+        data-aos-delay="{{ forloop.counter|add:0 }}00">
+        <div class="card item-card">
+          {% if item.images.all %}
+          <img
+            src="{{ item.images.first.image.url }}"
+            class="card-img-top"
+            alt="{{ item.images.first.alt_text|default:item.title }}"
+            style="height: 200px; object-fit: cover"/>
+          {% else %}
+          <img
+            src="/static/images/placeholder.jpg"
+            class="card-img-top"
+            alt="No image available"
+            style="height: 200px; object-fit: cover" />
+          {% endif %}
+
+          <div class="card-body">
+            <div class="item-category">
+              <span class="badge bg-primary"
+                >{{ item.category.name|default:"Pallet" }}</span >
+            </div>
+
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text item-description">
+              {{ item.description|truncatewords:20 }}
+            </p>
+
+            <div class="item-pricing">
+              {% if item.original_price > item.current_price %}
+              <span
+                class="original-price text-muted text-decoration-line-through"
+                >${{ item.original_price }}</span >
+              <span class="current-price text-danger fw-bold"
+                >${{ item.current_price }}</span  >
+              <span class="discount-badge badge bg-success"
+                >Save {{ item.discount_percentage }}%</span  >
+              {% else %}
+              <span class="current-price fw-bold"
+                >${{ item.current_price }}</span  >
+              {% endif %}
+            </div>
+
+            <div class="item-quantity mb-2">
+              <small class="text-muted">In Stock: {{ item.quantity }}</small>
+            </div>
+
+            <div class="item-actions">
+              <a
+                href="{% url 'myapp:item_detail' item.id %}"
+                class="btn btn-outline-primary btn-sm"
+                >View Details</a >
+              <form
+                action="{% url 'myapp:add_to_cart' item.id %}"
+                method="post"
+                class="d-inline" >
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">
+                  Add to Cart
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p class="text-muted">No items available at the moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- /Items Store Section -->
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials section dark-background">
+  <img src="{% static 'assets/img/testimonial-bg.jpeg' %}" class="testimonials-bg" alt="Testimonials background" />
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="swiper init-swiper">
+      <script type="application/json" class="swiper-config">
+        {
+          "loop": true,
+          "speed": 600,
+          "autoplay": {
+            "delay": 5000
+          },
+          "slidesPerView": "auto",
+          "pagination": {
+            "el": ".swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+          }
+        }
+      </script>
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+            <h3>Sarah K.</h3>
+            <h4>eBay PowerSeller</h4>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i>
+            </div>
+            <p>
+              <i class="bi bi-quote quote-icon-left"></i>
+              <span>My business runs on Pallet Liquidation Depot. The manifests are accurate, and the quality is consistently better than other liquidators I've used. My last electronics pallet had a 90% resell rate!</span>
+              <i class="bi bi-quote quote-icon-right"></i>
+            </p>
+          </div>
+        </div>
+        <!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+  
+            <h3>Mike R.</h3>
+            <h4>Flea Market Vendor</h4>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i>
+            </div>
+            <p>
+              <i class="bi bi-quote quote-icon-left"></i>
+              <span>I've tried many sources, but the Depot is my go-to. The mixed pallets are perfectly balanced for my booth. Great brands, fair pricing, and the shipping is always fast. Highly recommended!</span>
+              <i class="bi bi-quote quote-icon-right"></i>
+            </p>
+          </div>
+        </div>
+        <!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+
+            <h3>James L.</h3>
+            <h4>Startup Owner</h4>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i>
+            </div>
+            <p>
+              <i class="bi bi-quote quote-icon-left"></i>
+              <span>Starting my online store was a risk, but Pallet Liquidation Depot made it affordable. Their 'Overstock' pallets gave me new-in-box inventory that sold out in weeks. This company is a game-changer for small businesses.</span>
+              <i class="bi bi-quote quote-icon-right"></i>
+            </p>
+          </div>
+        </div>
+        <!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+
+            <h3>Lisa M.</h3>
+            <h4>Amazon FBA Seller</h4>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i>
+            </div>
+            <p>
+              <i class="bi bi-quote quote-icon-left"></i>
+              <span>The condition grading system is spot-on. I can confidently buy pallets knowing exactly what to expect. This has streamlined my sourcing process and boosted my profit margins significantly.</span>
+              <i class="bi bi-quote quote-icon-right"></i>
+            </p>
+          </div>
+        </div>
+        <!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+
+            <h3>David T.</h3>
+            <h4>Retail Store Owner</h4>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i
+              ><i class="bi bi-star-fill"></i>
+            </div>
+            <p>
+              <i class="bi bi-quote quote-icon-left"></i>
+              <span>As a brick-and-mortar store owner, I need reliable inventory at the right price. Pallet Liquidation Depot delivers every time. Their customer service is exceptional, and the product quality exceeds expectations.</span>
+              <i class="bi bi-quote quote-icon-right"></i>
+            </p>
+          </div>
+        </div>
+        <!-- End testimonial item -->
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+<!-- /Testimonials Section -->
+
+{% endblock %}

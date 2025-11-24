@@ -1,0 +1,358 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}Payment - Complete Your Order{% endblock %} 
+
+{% block content %}
+<!-- Payment Section -->
+<section id="payment" class="payment section">
+  <div class="container">
+    <!-- Section Title -->
+    <div class="section-title" data-aos="fade-up">
+      <h2>Payment Method</h2>
+      <div>
+        <span>Choose</span>
+        <span class="description-title">Payment Method</span>
+      </div>
+    </div>
+    <!-- End Section Title -->
+
+    <div class="row justify-content-center">
+      <!-- Order Summary -->
+      <div class="col-lg-5 mb-4" data-aos="fade-up">
+        <div class="order-summary card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <!-- Customer Information -->
+            <div class="customer-info mb-4">
+              <h6>Shipping To:</h6>
+              <p class="mb-1">
+                {{ customer_info.first_name }} {{ customer_info.last_name }}
+              </p>
+              <p class="mb-1">{{ customer_info.address }}</p>
+              <p class="mb-1">
+                {{ customer_info.city }}, {{ customer_info.state }} {{ customer_info.zip_code }}
+              </p>
+              <p class="mb-0">
+                {{ customer_info.email }} | {{ customer_info.phone }}
+              </p>
+            </div>
+
+            <hr />
+
+            <!-- Order Items -->
+            <h6>Order Items:</h6>
+            {% for cart_item in cart_items %}
+            <div class="order-item d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <span class="fw-bold">{{ cart_item.item.title }}</span>
+                <br />
+                <small class="text-muted">
+                  Qty: {{ cart_item.quantity }} × ${{ cart_item.item.current_price }}</small>
+              </div>
+              <span class="fw-bold">${{ cart_item.total }}</span>
+            </div>
+            {% endfor %}
+
+            <hr />
+
+            <!-- Order Total -->
+            <div class="order-total d-flex justify-content-between fw-bold fs-5">
+              <span>Total Amount:</span>
+              <span>${{ cart_total }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+        <div class="payment-methods card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Select Payment Method</h5>
+          </div>
+          <div class="card-body">
+            <!-- Payment Method Selection Form -->
+            <form id="paymentForm" method="post">
+              {% csrf_token %}
+
+              <!-- PayPal -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="paypal" value="PayPal" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="paypal"> 
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-paypal fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">PayPal</h6>
+                      <small class="text-muted">Pay securely with your PayPal account</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Credit/Debit Card -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="creditcard" value="Credit/Debit Card" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="creditcard">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-credit-card fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Credit/Debit Card</h6>
+                      <small class="text-muted">Pay with Visa, MasterCard, or American Express</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Bank Transfer -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="banktransfer" value="Bank Transfer" autocomplete="off" />
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="banktransfer">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-bank fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Bank Transfer</h6>
+                      <small class="text-muted">Direct bank wire transfer</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Venmo -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="venmo" value="Venmo" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="venmo">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-wallet fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Venmo</h6>
+                      <small class="text-muted">Pay using your Venmo account</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Cash App -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="cashapp" value="Cash App" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="cashapp">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-phone fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Cash App</h6>
+                      <small class="text-muted">Pay using Cash App</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Apple Pay -->
+              <div class="payment-option mb-3">
+                <input type="radio" class="btn-check" name="payment_method" id="applepay" value="Apple Pay" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="applepay">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-apple fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Apple Pay</h6>
+                      <small class="text-muted">Pay securely with Apple Pay</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Zelle -->
+              <div class="payment-option mb-4">
+                <input type="radio" class="btn-check" name="payment_method" id="zelle" value="Zelle" autocomplete="off"/>
+                <label class="btn btn-outline-primary w-100 text-start p-3" for="zelle">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-building fs-4 me-3 text-primary"></i>
+                    <div>
+                      <h6 class="mb-1">Zelle</h6>
+                      <small class="text-muted">Pay using Zelle transfer</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Submit Button -->
+                <button type="button" class="btn btn-success btn-lg w-100" id="completePaymentBtn">
+                  <i class="bi bi-lock-fill"></i> Complete Payment
+                </button>
+            </form>
+
+            <!-- Security Notice -->
+            <div class="security-notice mt-4 text-center">
+              <p class="small text-muted">
+                <i class="bi bi-shield-check text-success"></i>
+                Your payment information is secure and encrypted
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support Information -->
+        <div class="support-info card mt-4 border-warning">
+          <div class="card-body text-center">
+            <i class="bi bi-headset text-warning fs-4"></i>
+            <h6 class="mt-2">Need Help?</h6>
+            <p class="small text-muted mb-2">
+              Contact our support team for payment assistance
+            </p>
+            <a href="mailto:support@palletliquidationdepot.com" class="btn btn-outline-warning btn-sm">
+              <i class="bi bi-envelope"></i> Contact Support
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Payment Section -->
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-warning" id="paymentModalLabel">Payment Unavailable</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="payment-processing mb-4">
+          <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem"></i>
+        </div>
+        <h6 id="paymentMethodText">Payment Method Unavailable</h6>
+        <p class="text-muted" id="paymentMessage">
+          This payment method is temporarily unavailable. Please contact us via email to complete your purchase.
+        </p>
+        <div class="redirect-info mt-3">
+          <p class="small text-muted">
+            You will be redirected to email in <span id="countdown">5</span> seconds...
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="redirectToEmail">
+          Continue to Email Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const completePaymentBtn = document.getElementById('completePaymentBtn');
+  const paymentForm = document.getElementById('paymentForm');
+  const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+  const paymentMethodText = document.getElementById('paymentMethodText');
+  const redirectToEmailBtn = document.getElementById('redirectToEmail');
+  
+  // Handle the complete payment button click
+  completePaymentBtn.addEventListener('click', function() {
+    const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+    
+    if (!selectedPayment) {
+      alert('Please select a payment method before completing your order.');
+      return;
+    }
+    
+    // Show the payment unavailable modal instead of submitting form
+    paymentMethodText.textContent = `${selectedPayment.value} Unavailable`;
+    paymentModal.show();
+    
+    // Start countdown
+    let countdown = 5;
+    const countdownElement = document.getElementById('countdown');
+    const countdownInterval = setInterval(function() {
+      countdown--;
+      countdownElement.textContent = countdown;
+      
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        redirectToEmail(selectedPayment.value);
+      }
+    }, 1000);
+    
+    // Handle immediate redirect
+    redirectToEmailBtn.onclick = function() {
+      clearInterval(countdownInterval);
+      redirectToEmail(selectedPayment.value);
+    };
+  });
+  
+  function redirectToEmail(paymentMethod) {
+    const email = 'support@palletliquidationdepot.com';
+    const subject = `Payment Assistance - ${paymentMethod}`;
+    const body = `Hello Pallet Liquidation Depot Team,
+
+I would like assistance with completing my payment using ${paymentMethod}.
+
+Order Details:
+- Customer: {{ customer_info.first_name }} {{ customer_info.last_name }}
+- Order Total: ${{ cart_total }}
+- Selected Payment Method: ${paymentMethod}
+
+Items in Cart:
+{% for cart_item in cart_items %}
+- {{ cart_item.quantity }}x {{ cart_item.item.title }} - ${{ cart_item.total }}
+{% endfor %}
+
+Please contact me to help complete this transaction.
+
+Thank you.`;
+
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+    paymentModal.hide();
+  }
+});
+</script>
+{% endblock extra_js %}
+
+<style>
+.payment-option .btn {
+  transition: all 0.3s ease;
+}
+
+.payment-option .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-option .btn-check:checked + .btn {
+  background-color: #e7f1ff;
+  border-color: #0d6efd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+}
+
+.order-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.empty-icon {
+  opacity: 0.7;
+}
+
+.quantity-display {
+  background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  min-width: 60px;
+  text-align: center;
+}
+</style>

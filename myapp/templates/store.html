@@ -1,0 +1,106 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block active_store %} active {% endblock active_store %} 
+{% block content %}
+<!-- Items Store Section -->
+<section id="store" class="store section">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Our Products</h2>
+    <div>
+      <span>Shop</span>
+      <span class="description-title">Our Products</span>
+    </div>
+  </div>
+  <!-- End Section Title -->
+
+  <div class="container">
+    <div class="row gy-4">
+      {% for item in items %}
+      <div
+        class="col-lg-4 col-md-6"
+        data-aos="fade-up"
+        data-aos-delay="{{ forloop.counter|add:0 }}00"
+      >
+        <div class="card item-card">
+          {% if item.images.all %}
+          <img
+            src="{{ item.images.first.image.url }}"
+            class="card-img-top"
+            alt="{{ item.images.first.alt_text|default:item.title }}"
+            style="height: 200px; object-fit: cover"
+          />
+          {% else %}
+          <img
+            src="/static/images/placeholder.jpg"
+            class="card-img-top"
+            alt="No image available"
+            style="height: 200px; object-fit: cover"
+          />
+          {% endif %}
+
+          <div class="card-body">
+            <div class="item-category">
+              <span class="badge bg-primary"
+                >{{ item.category.name|default:"Pallets" }}</span
+              >
+            </div>
+
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text item-description">
+              {{ item.description|truncatewords:20 }}
+            </p>
+
+            <div class="item-pricing">
+              {% if item.original_price > item.current_price %}
+              <span
+                class="original-price text-muted text-decoration-line-through"
+                >${{ item.original_price }}</span
+              >
+              <span class="current-price text-danger fw-bold"
+                >${{ item.current_price }}</span
+              >
+              <span class="discount-badge badge bg-success"
+                >Save {{ item.discount_percentage }}%</span
+              >
+              {% else %}
+              <span class="current-price fw-bold"
+                >${{ item.current_price }}</span
+              >
+              {% endif %}
+            </div>
+
+            <div class="item-quantity mb-2">
+              <small class="text-muted">In Stock: {{ item.quantity }}</small>
+            </div>
+
+            <div class="item-actions">
+              <a
+                href="{% url 'myapp:item_detail' item.id %}"
+                class="btn btn-outline-primary btn-sm"
+                >View Details</a
+              >
+              <form
+                action="{% url 'myapp:add_to_cart' item.id %}"
+                method="post"
+                class="d-inline"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">
+                  Add to Cart
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p class="text-muted">No items available at the moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- /Items Store Section -->
+{% endblock %}

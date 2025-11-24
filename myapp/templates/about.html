@@ -1,0 +1,66 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block active_about %} active {% endblock active_about %} 
+{% block content %} 
+
+<!-- About Section -->
+<section id="about" class="about section">
+  <div class="container">
+    <div class="row gy-4">
+      <div
+        class="col-lg-5 position-relative"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        <img src="assets/img/about.jpg" class="img-fluid" alt="Warehouse full of liquidation pallets at Pallet Liquidation Depot" />
+        <a
+          href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
+          class="glightbox pulsating-play-btn"
+        ></a>
+      </div>
+
+      <div class="col-lg-7 content" data-aos="fade-up" data-aos-delay="100">
+        <h3>Your Trusted Partner in Liquidation</h3>
+        <p>
+          At Pallet Liquidation Depot, we bridge the gap between major retailers and savvy entrepreneurs. We acquire truckloads of high-quality returned and overstock merchandise, sort it for value, and pass the incredible savings directly to you. Our mission is to make bulk buying simple, profitable, and reliable.
+        </p>
+        <ul>
+          <li>
+            <i class="bi bi-diagram-3"></i>
+            <div>
+              <h5>Direct from Major Retailers</h5>
+              <p>
+                Our pallets are sourced directly from top-tier retailers, ensuring you get authentic, brand-name products that are in high demand.
+              </p>
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-fullscreen-exit"></i>
+            <div>
+              <h5>Transparent & Detailed Manifests</h5>
+              <p>
+                Know what you're buying. We provide detailed manifests with condition grades, so you can buy with confidence and maximize your ROI.
+              </p>
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-broadcast"></i>
+            <div>
+              <h5>Curated for Maximum Profit</h5>
+              <p>
+                We don't just sell random boxes. Our team curates pallets by category and potential value, helping you find the perfect inventory for your business.
+              </p>
+            </div>
+          </li>
+        </ul>
+        <p>
+          Whether you're an established reseller or just starting out, we provide the inventory you need to succeed. Build your business with Pallet Liquidation Depot.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /About Section -->
+
+
+{% endblock content %}

@@ -1,0 +1,171 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}Shopping Cart -Your Cart{% endblock %} 
+{% block content %}
+<!-- Cart Section -->
+<section id="cart" class="cart section">
+  <div class="container">
+    <!-- Section Title -->
+    <div class="section-title" data-aos="fade-up">
+      <h2>Shopping Cart</h2>
+      <div>
+        <span>Your</span> <span class="description-title">Cart Items</span>
+      </div>
+    </div>
+    <!-- End Section Title -->
+
+    {% if cart_items %}
+    <div class="row">
+      <!-- Cart Items -->
+      <div class="col-lg-8" data-aos="fade-up">
+        <div class="cart-items">
+          {% for cart_item in cart_items %}
+          <div class="cart-item card mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <!-- Item Image -->
+                <div class="col-md-2">
+                  {% if cart_item.item.images.all %}
+                  <img
+                    src="{{ cart_item.item.images.first.image.url }}"
+                    class="img-fluid rounded"
+                    alt="{{ cart_item.item.title }}"
+                    style="height: 80px; object-fit: cover"
+                  />
+                  {% else %}
+                  <img
+                    src="{% static 'images/placeholder.jpg' %}"
+                    class="img-fluid rounded"
+                    alt="No image available"
+                    style="height: 80px; object-fit: cover"/>
+                  {% endif %}
+                </div>
+
+                <!-- Item Details -->
+                <div class="col-md-4">
+                  <h5 class="item-title">{{ cart_item.item.title }}</h5>
+                  <p class="text-muted mb-0">{{ cart_item.item.vendor }}</p>
+                  <small class="text-muted">Category: {{ cart_item.item.category.name|default:"pallets" }}</small>
+                </div>
+
+                <!-- Quantity -->
+                <div class="col-md-2">
+                  <div class="quantity-section">
+                    <label class="form-label">Quantity:</label>
+                    <div class="d-flex align-items-center">
+                      <span class="quantity-display fw-bold" >{{ cart_item.quantity }}</span >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Price -->
+                <div class="col-md-2">
+                  <div class="price-section text-end">
+                    <div class="item-price">
+                      ${{ cart_item.item.current_price }}
+                    </div>
+                    {% if cart_item.item.original_price > cart_item.item.current_price %}
+                    <small class="text-muted text-decoration-line-through">
+                      ${{ cart_item.item.original_price }}</small>
+
+                      {% endif %}
+
+                    <div class="item-total fw-bold mt-1">
+                      ${{ cart_item.total }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Remove Button -->
+                <div class="col-md-2">
+                  <form
+                    action="{% url 'myapp:remove_from_cart' cart_item.item.id %}"
+                    method="post"
+                    class="text-end"
+                  >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                      <i class="bi bi-trash"></i> Remove
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="cart-summary card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <div class="summary-item d-flex justify-content-between mb-2">
+              <span>Subtotal:</span>
+              <span>${{ cart_total }}</span>
+            </div>
+            <div class="summary-item d-flex justify-content-between mb-2">
+              <span>Shipping:</span>
+              <span class="text-success">Calculated at checkout</span>
+            </div>
+            <div class="summary-item d-flex justify-content-between mb-2">
+              <span>Tax:</span>
+              <span class="text-success">Calculated at checkout</span>
+            </div>
+            <hr />
+            <div
+              class="summary-total d-flex justify-content-between fw-bold fs-5"
+            >
+              <span>Total:</span>
+              <span>${{ cart_total }}</span>
+            </div>
+
+            <div class="cart-actions mt-4">
+              <a
+                href="{% url 'myapp:store' %}"
+                class="btn btn-outline-secondary w-100 mb-2"
+              >
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+              </a>
+              <a
+                href="{% url 'myapp:checkout' %}"
+                class="btn btn-primary w-100"
+              >
+                <i class="bi bi-lock"></i> Proceed to Checkout
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Savings Notice -->
+        <div class="savings-notice card mt-3 border-warning">
+          <div class="card-body text-center">
+            <i class="bi bi-tag text-warning fs-4"></i>
+            <h6 class="mt-2">Great Savings!</h6>
+            <p class="small text-muted mb-0">
+              You're saving on bulk goods with wholesale pricing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="empty-cart text-center" data-aos="fade-up">
+      <div class="empty-icon mb-4">
+        <i class="bi bi-cart-x" style="font-size: 4rem; color: #6c757d"></i>
+      </div>
+      <h3>Your cart is empty</h3>
+      <p class="text-muted mb-4">Start shopping to add items to your cart</p>
+      <a href="{% url 'myapp:store' %}" class="btn btn-primary btn-lg">
+        <i class="bi bi-bag"></i> Start Shopping
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+<!-- /Cart Section -->
+{% endblock %}

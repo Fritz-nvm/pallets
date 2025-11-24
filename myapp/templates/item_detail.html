@@ -1,0 +1,253 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block active_store %} active {% endblock active_store %} 
+{% block content %}
+<!-- Item Details Section -->
+<section id="item-details" class="item-details section">
+  <div class="container">
+    <div class="row">
+      <!-- Item Images -->
+      <div class="col-lg-6" data-aos="fade-up">
+        <div class="item-gallery">
+          {% if item.images.all %}
+          <!-- Main Image -->
+          <div class="main-image mb-3">
+            <img
+              src="{{ item.images.first.image.url }}"
+              class="img-fluid rounded"
+              alt="{{ item.images.first.alt_text|default:item.title }}"
+              id="mainImage"
+            />
+          </div>
+
+          <!-- Thumbnail Gallery -->
+          {% if item.images.count > 1 %}
+          <div class="thumbnail-gallery">
+            <div class="row g-2">
+              {% for image in item.images.all %}
+              <div class="col-3">
+                <img
+                  src="{{ image.image.url }}"
+                  class="img-fluid rounded thumbnail {% if forloop.first %}active{% endif %}"
+                  alt="{{ image.alt_text|default:item.title }}"
+                  onclick="changeMainImage(this)"
+                />
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %} {% else %}
+          <div class="main-image">
+            <img
+              src="/static/images/placeholder.jpg"
+              class="img-fluid rounded"
+              alt="No image available"
+            />
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Item Information -->
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="item-info">
+          <!-- Category -->
+          <div class="category-badge mb-2">
+            <span class="badge bg-primary">{{ item.category.name|default:"Pallet" }}</span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="item-title">{{ item.title }}</h1>
+
+          <!-- Vendor -->
+          <p class="item-vendor text-muted">Vendor: {{ item.vendor }}</p>
+
+          <!-- Pricing -->
+          <div class="pricing-section mb-3">
+            {% if item.original_price > item.current_price %}
+            <div
+              class="original-price text-muted text-decoration-line-through h5"
+            >
+              ${{ item.original_price }}
+            </div>
+            <div class="current-price text-danger h3 fw-bold">
+              ${{ item.current_price }}
+            </div>
+            <div class="savings">
+              <span class="badge bg-success fs-6">You Save ${{ item.discount_amount }}</span>
+            </div>
+            {% else %}
+            <div class="current-price h3 fw-bold">
+              ${{ item.current_price }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Stock Information -->
+          <div class="stock-info mb-3">
+            {% if item.quantity > 0 %}
+            <span class="text-success">✓ In Stock ({{ item.quantity }} available)</span>
+            {% else %}
+            <span class="text-danger">✗ Out of Stock</span>
+            {% endif %}
+          </div>
+
+          <!-- Add to Cart Form -->
+          <div class="add-to-cart-section mb-4">
+            <form
+              action="{% url 'myapp:add_to_cart' item.id %}"
+              method="post"
+              class="d-flex align-items-center gap-3">
+              {% csrf_token %} 
+              {% if item.quantity > 0 %}
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-cart-plus"></i> Add to Cart
+              </button>
+               <a href="{% url 'myapp:checkout' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-bag-check me-1"></i> Checkout
+                </a>
+              {% else %}
+              <button type="button" class="btn btn-secondary btn-lg" disabled>
+                Out of Stock
+              </button>
+              {% endif %}
+            </form>
+          </div>
+
+          <!-- Description -->
+          <div class="description-section">
+            <h4>Description</h4>
+            <p class="item-description">{{ item.description }}</p>
+          </div>
+
+          <!-- Product Details -->
+          <div class="product-details mt-4">
+            <h5>Product Details</h5>
+            <ul class="list-unstyled">
+              <li><strong>Vendor:</strong> {{ item.vendor }}</li>
+              <li><strong>Department:</strong> {{ item.department }}</li>
+              <li>
+                <strong>Category:</strong> {{ item.category.name|default:"pallets" }}
+              </li>
+              <li><strong>Condition:</strong> Bulk Pallet</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Item Details Section -->
+
+<!-- Related Items Section -->
+<section id="related-items" class="related-items section bg-light">
+  <div class="container">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Related Products</h2>
+      <p>You might also like</p>
+    </div>
+
+    <div class="row gy-4">
+      {% for related_item in related_items %}
+      <div
+        class="col-lg-3 col-md-6"
+        data-aos="fade-up"
+        data-aos-delay="{{ forloop.counter|add:0 }}00"
+      >
+        <div class="card item-card h-100">
+          {% if related_item.images.all %}
+          <img
+            src="{{ related_item.images.first.image.url }}"
+            class="card-img-top"
+            alt="{{ related_item.title }}"
+            style="height: 150px; object-fit: cover"
+          />
+          {% else %}
+          <img
+            src="/static/images/placeholder.jpg"
+            class="card-img-top"
+            alt="No image available"
+            style="height: 150px; object-fit: cover"
+          />
+          {% endif %}
+
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">{{ related_item.title|truncatewords:5 }}</h6>
+            <div class="pricing mt-auto">
+              {% if related_item.original_price > related_item.current_price %}
+              <span
+                class="original-price text-muted text-decoration-line-through"
+                >${{ related_item.original_price }}</span
+              >
+              <span class="current-price text-danger fw-bold"
+                >${{ related_item.current_price }}</span
+              >
+              {% else %}
+              <span class="current-price fw-bold"
+                >${{ related_item.current_price }}</span
+              >
+              {% endif %}
+            </div>
+            <a
+              href="{% url 'myapp:item_detail' related_item.id %}"
+              class="btn btn-outline-primary btn-sm mt-2"
+              >View Details</a
+            >
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- /Related Items Section -->
+
+<script>
+  function changeMainImage(thumbnail) {
+    // Update main image
+    document.getElementById("mainImage").src = thumbnail.src;
+
+    // Update active thumbnail
+    document.querySelectorAll(".thumbnail").forEach(function (thumb) {
+      thumb.classList.remove("active");
+    });
+    thumbnail.classList.add("active");
+  }
+</script>
+
+<style>
+  .thumbnail {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  .thumbnail.active,
+  .thumbnail:hover {
+    opacity: 1;
+    border: 2px solid #007bff;
+  }
+
+  .item-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+  }
+
+  .item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .original-price {
+    font-size: 1.1em;
+  }
+
+  .current-price {
+    font-size: 1.3em;
+  }
+
+  .discount-badge {
+    font-size: 0.8em;
+  }
+</style>
+{% endblock content %}
