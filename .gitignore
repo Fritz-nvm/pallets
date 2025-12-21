@@ -73,6 +73,7 @@ celerybeat.pid
 .env
 .venv
 env/
+env
 venv/
 ENV/
 env.bak/
@@ -82,7 +83,7 @@ venv.bak/
 *.sqlite3
 *.db
 # Django stuff:
-item_images/
+/item_images
 
 # Spyder project settings
 .spyderproject
