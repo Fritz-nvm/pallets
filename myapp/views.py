@@ -158,7 +158,7 @@ def checkout(request):
 
     if not cart:
         messages.warning(request, "Your cart is empty!")
-        return redirect("store")
+        return redirect("myapp:store")
 
     cart_items = []
     total = 0
